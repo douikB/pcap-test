@@ -1,8 +1,8 @@
+#include <stdio.h>
 #include <pcap.h>
 #include <stdbool.h>
-#include <stdio.h>
 
-#define ETHER_ADDR_LEN 6
+#define ETHER_ADDR_LEN          6
 #define ETHERTYPE_IP            0x0800
 
 struct libnet_ethernet_hdr
@@ -189,14 +189,14 @@ int main(int argc, char* argv[]) {
         printf("Source Port = %d\nDestination Port = %d\n\n", ntohs(tcp_hdr->th_sport), ntohs(tcp_hdr->th_dport));
 
         // Data
-        const u_char* data;
-        data = packet + sizeof(libnet_ipv4_hdr) + sizeof(libnet_ethernet_hdr) + sizeof(libnet_tcp_hdr) + 12; //OPTION 12byte
+        const u_char* data = packet + sizeof(libnet_ipv4_hdr) + sizeof(libnet_ethernet_hdr) + sizeof(libnet_tcp_hdr);
 
         printf("Data : 0x");
         for (int i = 0; i < 10; i++) {
             printf("%02x", data[i]);
         }
         printf("\n\n");
+
     }
 
     pcap_close(pcap);
