@@ -189,14 +189,23 @@ int main(int argc, char* argv[]) {
         printf("Source Port = %d\nDestination Port = %d\n\n", ntohs(tcp_hdr->th_sport), ntohs(tcp_hdr->th_dport));
 
         // Data
-        const u_char* data = packet + sizeof(libnet_ipv4_hdr) + sizeof(libnet_ethernet_hdr) + sizeof(libnet_tcp_hdr);
+        uint8_t tcp_hl = (((const uint8_t*)tcp_hdr)[12] >> 4) & 0x0F;
+        uint32_t tcp_header_len = tcp_hl * 4;
+        size_t headers_total_length = sizeof(libnet_ethernet_hdr) + sizeof(libnet_ipv4_hdr) + tcp_header_len;
+        const u_char* data = packet +  headers_total_length;
+        size_t payload_length = header->caplen - headers_total_length;
 
-        printf("Data : 0x");
-        for (int i = 0; i < 10; i++) {
-            printf("%02x", data[i]);
+        if (payload_length > 0)
+        {
+            printf("Data : 0x");
+            uint32_t count = payload_length > 10 ? 10 : payload_length;
+            for (int i = 0; i < count; i++) {
+                printf("%02x", data[i]);
+            }
+            printf("\n\n");
         }
-        printf("\n\n");
-
+        else
+            printf("DATA IS EMPTY =)\n\n");
     }
 
     pcap_close(pcap);
