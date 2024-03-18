@@ -111,21 +111,6 @@ Param param = {
     .dev_ = NULL
 };
 
-class PacketParser {
-public:
-    PacketParser(const u_char* packet);
-    struct libnet_ethernet_hdr* eth_hdr;
-    struct libnet_ipv4_hdr* ip_hdr;
-    struct libnet_tcp_hdr* tcp_hdr;
-
-    // Ethernet MAC Address
-    char smac_addr[18], dmac_addr[18];
-    uint32_t src_ip_addr, dst_ip_addr;
-
-    // Data
-    const u_char* data;
-};
-
 bool parse(Param* param, int argc, char* argv[]) {
     if (argc != 2) {
         usage();
